@@ -28,16 +28,14 @@ public class CharacterControl extends Control {
     public CharacterControl(String spriteSheetName) {
         this.spriteSheetName = spriteSheetName;
 
-        Rectangle2D idleArea = new Rectangle2D(0, 6 * FRAME_HEIGHT, 8 * FRAME_WIDTH, FRAME_HEIGHT);
+        Rectangle2D idleArea = new Rectangle2D(0, 6 * FRAME_HEIGHT, 1 * FRAME_WIDTH, FRAME_HEIGHT);
 
         Texture spriteSheet = FXGL.getAssetLoader()
-                .loadTexture(spriteSheetName)
-                .subTexture(idleArea);
+                .loadTexture(spriteSheetName);
 
-        texture = FXGL.getAssetLoader()
-                .loadTexture(spriteSheetName)
+        texture = spriteSheet
                 .subTexture(idleArea)
-                .toAnimatedTexture(8, Duration.seconds(1));
+                .toAnimatedTexture(1, Duration.seconds(1));
 
         animIdle = texture.getAnimationChannel();
         texture.start(FXGL.getApp().getStateMachine().getPlayState());
