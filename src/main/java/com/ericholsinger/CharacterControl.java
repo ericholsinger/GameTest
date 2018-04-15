@@ -1,13 +1,11 @@
 package com.ericholsinger;
 
 import com.almasb.fxgl.app.FXGL;
-import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.entity.Control;
-import javafx.geometry.HorizontalDirection;
 import javafx.geometry.Rectangle2D;
 import javafx.util.Duration;
 
