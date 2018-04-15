@@ -10,6 +10,7 @@ import com.almasb.fxgl.texture.Texture;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 
+import java.awt.event.KeyEvent;
 import java.util.Map;
 
 /**
@@ -55,6 +56,10 @@ public class App extends GameApplication {
 
         input.addAction(new UserAction("Move Right") {
             @Override
+            protected void onActionBegin() {
+                player.getControl(CharacterControl.class).walk(Direction.EAST);
+            }
+            @Override
             protected void onAction() {
                 if (player.getRightX() + PLAYER_CENTER + MOVE_DISTANCE <= getGameScene().getWidth()) {
                     player.translateX(MOVE_DISTANCE); // move right 5 pixels
@@ -64,12 +69,21 @@ public class App extends GameApplication {
                     getAudioPlayer().playSound(BUMPSOUND);
                 }
             }
+            @Override
+            protected void onActionEnd() {
+                player.getControl(CharacterControl.class).idle(Direction.EAST);
+            }
         }, KeyCode.D);
 
         input.addAction(new UserAction("Move Left") {
             @Override
+            protected void onActionBegin() {
+                player.getControl(CharacterControl.class).walk(Direction.WEST);
+            }
+            @Override
             protected void onAction() {
                 if (player.getX() + PLAYER_CENTER - MOVE_DISTANCE >= 0) {
+                    player.getControl(CharacterControl.class).walk(Direction.WEST);
                     player.translateX(-MOVE_DISTANCE); // move left 5 pixels
                     getGameState().increment("pixelsMoved", MOVE_DISTANCE);
                     getGameState().setValue("playerX", ((int) player.getX()));
@@ -77,12 +91,21 @@ public class App extends GameApplication {
                     getAudioPlayer().playSound(BUMPSOUND);
                 }
             }
+            @Override
+            protected void onActionEnd() {
+                player.getControl(CharacterControl.class).idle(Direction.WEST);
+            }
         }, KeyCode.A);
 
         input.addAction(new UserAction("Move Up") {
             @Override
+            protected void onActionBegin() {
+                player.getControl(CharacterControl.class).walk(Direction.NORTH);
+            }
+            @Override
             protected void onAction() {
                 if (player.getY() + PLAYER_CENTER - MOVE_DISTANCE >= 0) {
+                    player.getControl(CharacterControl.class).walk(Direction.NORTH);
                     player.translateY(-MOVE_DISTANCE); // move up 5 pixels
                     getGameState().increment("pixelsMoved", MOVE_DISTANCE);
                     getGameState().setValue("playerY", ((int) player.getY()));
@@ -90,12 +113,21 @@ public class App extends GameApplication {
                     getAudioPlayer().playSound(BUMPSOUND);
                 }
             }
+            @Override
+            protected void onActionEnd() {
+                player.getControl(CharacterControl.class).idle(Direction.NORTH);
+            }
         }, KeyCode.W);
 
         input.addAction(new UserAction("Move Down") {
             @Override
+            protected void onActionBegin() {
+                player.getControl(CharacterControl.class).walk(Direction.SOUTH);
+            }
+            @Override
             protected void onAction() {
                 if (player.getY() + PLAYER_CENTER + MOVE_DISTANCE <= getGameScene().getHeight()) {
+                    player.getControl(CharacterControl.class).walk(Direction.SOUTH);
                     player.translateY(MOVE_DISTANCE); // move down 5 pixels
                     getGameState().increment("pixelsMoved", MOVE_DISTANCE);
                     getGameState().setValue("playerY", ((int) player.getY()));
@@ -103,7 +135,12 @@ public class App extends GameApplication {
                     getAudioPlayer().playSound(BUMPSOUND);
                 }
             }
+            @Override
+            protected void onActionEnd() {
+                player.getControl(CharacterControl.class).idle(Direction.SOUTH);
+            }
         }, KeyCode.S);
+
     }
 
     @Override
@@ -150,6 +187,8 @@ public class App extends GameApplication {
 
         getAssetLoader().loadSound(BUMPSOUND);
         getAssetLoader().loadMusic(BGMUSIC);
+
+        getAudioPlayer().setGlobalMusicVolume(.05);
         getAudioPlayer().loopBGM(BGMUSIC);
 
 
