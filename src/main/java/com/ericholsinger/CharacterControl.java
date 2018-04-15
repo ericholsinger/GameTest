@@ -14,7 +14,7 @@ import java.util.HashMap;
  * Created by eric on 4/14/18.
  */
 public class CharacterControl extends Control {
-    private boolean isMoving = false;
+    private int moveEvents = 0;
 
     private Direction direction;
 
@@ -44,7 +44,7 @@ public class CharacterControl extends Control {
             );
         }
 
-        texture = new AnimatedTexture(animIdle.get(Direction.SOUTH));
+        texture = new AnimatedTexture(animIdle.get(direction));
 
         texture.start(FXGL.getApp().getStateMachine().getPlayState());
     }
@@ -65,15 +65,14 @@ public class CharacterControl extends Control {
 
     public void walk(Direction direction) {
         this.direction = direction;
-        this.isMoving = true;
+        ++this.moveEvents;
     }
 
-    public void idle(Direction direction) {
-        this.direction = direction;
-        this.isMoving = false;
+    public void idle() {
+        --this.moveEvents;
     }
 
     public boolean isMoving() {
-        return this.isMoving;
+        return this.moveEvents > 0;
     }
 }

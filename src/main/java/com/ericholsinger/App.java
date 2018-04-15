@@ -71,7 +71,8 @@ public class App extends GameApplication {
             }
             @Override
             protected void onActionEnd() {
-                player.getControl(CharacterControl.class).idle(Direction.EAST);
+
+                player.getControl(CharacterControl.class).idle();
             }
         }, KeyCode.D);
 
@@ -83,7 +84,6 @@ public class App extends GameApplication {
             @Override
             protected void onAction() {
                 if (player.getX() + PLAYER_CENTER - MOVE_DISTANCE >= 0) {
-                    player.getControl(CharacterControl.class).walk(Direction.WEST);
                     player.translateX(-MOVE_DISTANCE); // move left 5 pixels
                     getGameState().increment("pixelsMoved", MOVE_DISTANCE);
                     getGameState().setValue("playerX", ((int) player.getX()));
@@ -93,7 +93,7 @@ public class App extends GameApplication {
             }
             @Override
             protected void onActionEnd() {
-                player.getControl(CharacterControl.class).idle(Direction.WEST);
+                player.getControl(CharacterControl.class).idle();
             }
         }, KeyCode.A);
 
@@ -105,7 +105,6 @@ public class App extends GameApplication {
             @Override
             protected void onAction() {
                 if (player.getY() + PLAYER_CENTER - MOVE_DISTANCE >= 0) {
-                    player.getControl(CharacterControl.class).walk(Direction.NORTH);
                     player.translateY(-MOVE_DISTANCE); // move up 5 pixels
                     getGameState().increment("pixelsMoved", MOVE_DISTANCE);
                     getGameState().setValue("playerY", ((int) player.getY()));
@@ -115,7 +114,7 @@ public class App extends GameApplication {
             }
             @Override
             protected void onActionEnd() {
-                player.getControl(CharacterControl.class).idle(Direction.NORTH);
+                player.getControl(CharacterControl.class).idle();
             }
         }, KeyCode.W);
 
@@ -127,7 +126,6 @@ public class App extends GameApplication {
             @Override
             protected void onAction() {
                 if (player.getY() + PLAYER_CENTER + MOVE_DISTANCE <= getGameScene().getHeight()) {
-                    player.getControl(CharacterControl.class).walk(Direction.SOUTH);
                     player.translateY(MOVE_DISTANCE); // move down 5 pixels
                     getGameState().increment("pixelsMoved", MOVE_DISTANCE);
                     getGameState().setValue("playerY", ((int) player.getY()));
@@ -137,7 +135,7 @@ public class App extends GameApplication {
             }
             @Override
             protected void onActionEnd() {
-                player.getControl(CharacterControl.class).idle(Direction.SOUTH);
+                player.getControl(CharacterControl.class).idle();
             }
         }, KeyCode.S);
 
