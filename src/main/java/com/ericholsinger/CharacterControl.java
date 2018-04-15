@@ -33,8 +33,8 @@ public class CharacterControl extends Control {
         for (Direction direction : Direction.values()) {
             animWalk.put(direction,
                     CharacterSpriteSheet.getAnimationChannel(spriteSheetName,
-                        Animation.WALK,
-                        direction)
+                            Animation.WALK,
+                            direction)
             );
 
             animIdle.put(direction,
