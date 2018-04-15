@@ -7,10 +7,10 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.*;
 import com.almasb.fxgl.texture.Texture;
+import com.ericholsinger.enums.Direction;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 
-import java.awt.event.KeyEvent;
 import java.util.Map;
 
 /**

@@ -1,4 +1,4 @@
-package com.ericholsinger;
+package com.ericholsinger.enums;
 
 /**
  * Created by eric on 4/14/18.
