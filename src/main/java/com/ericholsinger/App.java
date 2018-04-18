@@ -3,11 +3,14 @@ package com.ericholsinger;
 import com.almasb.fxgl.app.*;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.component.CollidableComponent;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.settings.*;
 import com.almasb.fxgl.texture.Texture;
 import com.ericholsinger.enums.Direction;
+import com.ericholsinger.enums.EntityType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 
@@ -20,6 +23,8 @@ import java.util.Map;
 public class App extends GameApplication {
 
     private Entity player;
+    private Entity npc;
+
     private final int MOVE_DISTANCE = 5;
     private final int PLAYER_CENTER = 32;
 
@@ -41,10 +46,22 @@ public class App extends GameApplication {
     protected void initGame() {
         super.initGame();
 
+        CharacterControl control = new CharacterControl("male-character01.png");
         player = Entities.builder()
+                .type(EntityType.PLAYER)
                 .at(300,300)
-                .with(new CharacterControl("male-character01.png"))
-//                .viewFromNode(new Rectangle(PLAYER_CENTER, PLAYER_CENTER, Color.BLUE))
+                .with(control)
+                .viewFromNodeWithBBox(control.getNodeWithBBox())
+                .with(new CollidableComponent(true))
+                .buildAndAttach(getGameWorld());
+
+        control = new CharacterControl("male-character02.png");
+        npc = Entities.builder()
+                .type(EntityType.NPC)
+                .at(400,300)
+                .with(control)
+                .viewFromNodeWithBBox(control.getNodeWithBBox())
+                .with(new CollidableComponent(true))
                 .buildAndAttach(getGameWorld());
     }
 
@@ -160,6 +177,11 @@ public class App extends GameApplication {
         textPlayerYLabel.setTranslateY(60);
         textPlayerYLabel.textProperty().set("Y pos");
 
+        Text textPlayerCollidedLabel = new Text();
+        textPlayerCollidedLabel.setTranslateX(10);
+        textPlayerCollidedLabel.setTranslateY(80);
+        textPlayerCollidedLabel.textProperty().set("Collide");
+
         Text textPixelsMoved = new Text();
         textPixelsMoved.setTranslateX(60);
         textPixelsMoved.setTranslateY(20);
@@ -175,13 +197,20 @@ public class App extends GameApplication {
         textPlayerY.setTranslateY(60);
         textPlayerY.textProperty().bind(getGameState().intProperty("playerY").asString());
 
+        Text textPlayerCollided = new Text();
+        textPlayerCollided.setTranslateX(60);
+        textPlayerCollided.setTranslateY(80);
+        textPlayerCollided.textProperty().bind(getGameState().stringProperty("collided"));
+
         getGameScene().addUINode(textPixelsMovedLabel);
         getGameScene().addUINode(textPlayerXLabel);
         getGameScene().addUINode(textPlayerYLabel);
+        getGameScene().addUINode(textPlayerCollidedLabel);
 
         getGameScene().addUINode(textPixelsMoved);
         getGameScene().addUINode(textPlayerX);
         getGameScene().addUINode(textPlayerY);
+        getGameScene().addUINode(textPlayerCollided);
 
         getAssetLoader().loadSound(BUMPSOUND);
         getAssetLoader().loadMusic(BGMUSIC);
@@ -193,10 +222,30 @@ public class App extends GameApplication {
     }
 
     @Override
+    protected void initPhysics() {
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EntityType.NPC) {
+
+            // order of types is the same as passed into the constructor
+            @Override
+            protected void onCollisionBegin(Entity player, Entity npc) {
+                getGameState().setValue("collided", "YES");
+                getAudioPlayer().playSound(BUMPSOUND);
+            }
+
+            @Override
+            protected  void onCollisionEnd(Entity player, Entity npc) {
+                getGameState().setValue("collided", "NO");
+            }
+        });
+    }
+
+    @Override
     protected void initGameVars(Map<String, Object> vars) {
         vars.put("pixelsMoved", 0);
         vars.put("playerX", 0);
         vars.put("playerY", 0);
+        vars.put("playerY", 0);
+        vars.put("collided", "NO");
     }
 
     public static void main(String[] args) {

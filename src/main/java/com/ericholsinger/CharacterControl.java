@@ -7,6 +7,7 @@ import com.almasb.fxgl.texture.AnimationChannel;
 import com.almasb.fxgl.entity.Control;
 import com.ericholsinger.enums.Animation;
 import com.ericholsinger.enums.Direction;
+import javafx.scene.Node;
 
 import java.util.HashMap;
 
@@ -22,6 +23,10 @@ public class CharacterControl extends Control {
 
     private HashMap<Direction, AnimationChannel> animWalk;
     private HashMap<Direction, AnimationChannel> animIdle;
+
+    private CharacterControl() {
+        // no default constructor
+    }
 
     public CharacterControl(String spriteSheetName) {
         animIdle = new HashMap<>();
@@ -47,6 +52,10 @@ public class CharacterControl extends Control {
         texture = new AnimatedTexture(animIdle.get(direction));
 
         texture.start(FXGL.getApp().getStateMachine().getPlayState());
+    }
+
+    public Node getNodeWithBBox() {
+        return texture;
     }
 
     @Override
