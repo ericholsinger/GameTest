@@ -73,15 +73,40 @@ public class CharacterControl extends Control {
     }
 
     public void walk(Direction direction) {
-        this.direction = direction;
-        ++this.moveEvents;
+        setDirection(direction);
+        addMoveEvent();
     }
 
     public void idle() {
-        --this.moveEvents;
+        subtractMoveEvent();
+    }
+
+    public void idle(Direction direction) {
+        setDirection(direction);
+        idle();
     }
 
     public boolean isMoving() {
         return this.moveEvents > 0;
     }
+
+    private void addMoveEvent() {
+        ++this.moveEvents;
+    }
+
+    private void subtractMoveEvent() {
+        // never go below zero
+        if (this.moveEvents > 0) {
+            --this.moveEvents;
+        }
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
 }

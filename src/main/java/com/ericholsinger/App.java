@@ -11,6 +11,7 @@ import com.almasb.fxgl.settings.*;
 import com.almasb.fxgl.texture.Texture;
 import com.ericholsinger.enums.Direction;
 import com.ericholsinger.enums.EntityType;
+import com.ericholsinger.utility.DirectionHelper;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 
@@ -230,6 +231,13 @@ public class App extends GameApplication {
             protected void onCollisionBegin(Entity player, Entity npc) {
                 getGameState().setValue("collided", "YES");
                 getAudioPlayer().playSound(BUMPSOUND);
+
+                // make npc turn toward character, using the opposite of player direction
+                npc.getControl(CharacterControl.class).idle(
+                        DirectionHelper.opposite(
+                                player.getControl(CharacterControl.class).getDirection()
+                        )
+                );
             }
 
             @Override
