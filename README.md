@@ -10,6 +10,9 @@ Currently this test demonstrates:
 * sprite sheet slicing for walking and idle animations
 * animated the walk/idle sequence in all four cardinal coordinates (North, East, South, West)
 * minimal "moonwalking", by adjusting the animation duration
+* second "npc" character
+* detect simple bounding box collision of entities
+* npc turns toward player on collision
 
 ## Getting Started
 
