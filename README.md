@@ -2,22 +2,6 @@
 
 Experimenting with [AlmasB](https://github.com/AlmasB) JavaFX library [FXGL](https://github.com/AlmasB/FXGL)
 
-# ChangeLog
-0.1
-* displaying the x,y coordinates of the player object
-* bounding the player object within the game screen
-* playing a bumping sound at the edge of the screen
-* background ambient music
-* sprite sheet slicing for walking and idle animations
-* animated the walk/idle sequence in all four cardinal coordinates (North, East, South, West)
-* minimal "moonwalking", by adjusting the animation duration
-* second "npc" character
-* detect simple bounding box collision of entities
-* npc turns toward player on collision
-
-0.2
-* refactored to FXGL 0.5.0
-
 ## Getting Started
 
 I'm using IntelliJ on a Mac and I started with the [FXGL Wiki](https://github.com/AlmasB/FXGL/wiki/Introduction) Getting Started Tutorial. 
@@ -47,3 +31,19 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 * [AlmasB](https://github.com/AlmasB) for FXGL
 
+
+# ChangeLog
+0.1
+* displaying the x,y coordinates of the player object
+* bounding the player object within the game screen
+* playing a bumping sound at the edge of the screen
+* background ambient music
+* sprite sheet slicing for walking and idle animations
+* animated the walk/idle sequence in all four cardinal coordinates (North, East, South, West)
+* minimal "moonwalking", by adjusting the animation duration
+* second "npc" character
+* detect simple bounding box collision of entities
+* npc turns toward player on collision
+
+0.2
+* refactored to FXGL 0.5.0
