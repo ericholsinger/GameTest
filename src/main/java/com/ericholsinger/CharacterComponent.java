@@ -2,9 +2,9 @@ package com.ericholsinger;
 
 import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
-import com.almasb.fxgl.entity.Control;
 import com.ericholsinger.enums.Animation;
 import com.ericholsinger.enums.Direction;
 import javafx.scene.Node;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 /**
  * Created by eric on 4/14/18.
  */
-public class CharacterControl extends Control {
+public class CharacterComponent extends Component {
     private int moveEvents = 0;
 
     private Direction direction;
@@ -24,11 +24,11 @@ public class CharacterControl extends Control {
     private HashMap<Direction, AnimationChannel> animWalk;
     private HashMap<Direction, AnimationChannel> animIdle;
 
-    private CharacterControl() {
+    private CharacterComponent() {
         // no default constructor
     }
 
-    public CharacterControl(String spriteSheetName) {
+    public CharacterComponent(String spriteSheetName) {
         animIdle = new HashMap<>();
         animWalk = new HashMap<>();
 
@@ -59,16 +59,16 @@ public class CharacterControl extends Control {
     }
 
     @Override
-    public void onAdded(Entity entity) {
+    public void onAdded() {
         entity.setView(texture);
     }
 
     @Override
-    public void onUpdate(Entity entity, double tpf) {
+    public void onUpdate(double tpf) {
         if (isMoving()) {
-            texture.setAnimationChannel(animWalk.get(direction));
+            texture.loopAnimationChannel(animWalk.get(direction));
         } else {
-            texture.setAnimationChannel(animIdle.get(direction));
+            texture.loopAnimationChannel(animIdle.get(direction));
         }
     }
 

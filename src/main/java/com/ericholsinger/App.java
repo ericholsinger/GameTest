@@ -3,7 +3,7 @@ package com.ericholsinger;
 import com.almasb.fxgl.app.*;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.component.CollidableComponent;
+import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
@@ -40,14 +40,14 @@ public class App extends GameApplication {
         settings.setWidth(800);
         settings.setHeight(600);
         settings.setTitle("Game Test App");
-        settings.setVersion("0.1");
+        settings.setVersion("0.2");
     }
 
     @Override
     protected void initGame() {
         super.initGame();
 
-        CharacterControl control = new CharacterControl("male-character01.png");
+        CharacterComponent control = new CharacterComponent("male-character01.png");
         player = Entities.builder()
                 .type(EntityType.PLAYER)
                 .at(300,300)
@@ -56,7 +56,7 @@ public class App extends GameApplication {
                 .with(new CollidableComponent(true))
                 .buildAndAttach(getGameWorld());
 
-        control = new CharacterControl("male-character02.png");
+        control = new CharacterComponent("male-character02.png");
         npc = Entities.builder()
                 .type(EntityType.NPC)
                 .at(400,300)
@@ -75,7 +75,7 @@ public class App extends GameApplication {
         input.addAction(new UserAction("Move Right") {
             @Override
             protected void onActionBegin() {
-                player.getControl(CharacterControl.class).walk(Direction.EAST);
+                player.getComponent(CharacterComponent.class).walk(Direction.EAST);
             }
             @Override
             protected void onAction() {
@@ -90,14 +90,14 @@ public class App extends GameApplication {
             @Override
             protected void onActionEnd() {
 
-                player.getControl(CharacterControl.class).idle();
+                player.getComponent(CharacterComponent.class).idle();
             }
         }, KeyCode.D);
 
         input.addAction(new UserAction("Move Left") {
             @Override
             protected void onActionBegin() {
-                player.getControl(CharacterControl.class).walk(Direction.WEST);
+                player.getComponent(CharacterComponent.class).walk(Direction.WEST);
             }
             @Override
             protected void onAction() {
@@ -111,14 +111,14 @@ public class App extends GameApplication {
             }
             @Override
             protected void onActionEnd() {
-                player.getControl(CharacterControl.class).idle();
+                player.getComponent(CharacterComponent.class).idle();
             }
         }, KeyCode.A);
 
         input.addAction(new UserAction("Move Up") {
             @Override
             protected void onActionBegin() {
-                player.getControl(CharacterControl.class).walk(Direction.NORTH);
+                player.getComponent(CharacterComponent.class).walk(Direction.NORTH);
             }
             @Override
             protected void onAction() {
@@ -132,14 +132,14 @@ public class App extends GameApplication {
             }
             @Override
             protected void onActionEnd() {
-                player.getControl(CharacterControl.class).idle();
+                player.getComponent(CharacterComponent.class).idle();
             }
         }, KeyCode.W);
 
         input.addAction(new UserAction("Move Down") {
             @Override
             protected void onActionBegin() {
-                player.getControl(CharacterControl.class).walk(Direction.SOUTH);
+                player.getComponent(CharacterComponent.class).walk(Direction.SOUTH);
             }
             @Override
             protected void onAction() {
@@ -153,7 +153,7 @@ public class App extends GameApplication {
             }
             @Override
             protected void onActionEnd() {
-                player.getControl(CharacterControl.class).idle();
+                player.getComponent(CharacterComponent.class).idle();
             }
         }, KeyCode.S);
 
@@ -233,9 +233,9 @@ public class App extends GameApplication {
                 getAudioPlayer().playSound(BUMPSOUND);
 
                 // make npc turn toward character, using the opposite of player direction
-                npc.getControl(CharacterControl.class).idle(
+                npc.getComponent(CharacterComponent.class).idle(
                         DirectionHelper.opposite(
-                                player.getControl(CharacterControl.class).getDirection()
+                                player.getComponent(CharacterComponent.class).getDirection()
                         )
                 );
             }

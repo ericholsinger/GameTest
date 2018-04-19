@@ -2,7 +2,8 @@
 
 Experimenting with [AlmasB](https://github.com/AlmasB) JavaFX library [FXGL](https://github.com/AlmasB/FXGL)
 
-Currently this test demonstrates:
+# ChangeLog
+0.1
 * displaying the x,y coordinates of the player object
 * bounding the player object within the game screen
 * playing a bumping sound at the edge of the screen
@@ -14,15 +15,18 @@ Currently this test demonstrates:
 * detect simple bounding box collision of entities
 * npc turns toward player on collision
 
+0.2
+* refactored to FXGL 0.5.0
+
 ## Getting Started
 
 I'm using IntelliJ on a Mac and I started with the [FXGL Wiki](https://github.com/AlmasB/FXGL/wiki/Introduction) Getting Started Tutorial. 
 
 ### Prerequisites
 
-Java 8
-Maven
-FXGL - [Get FXGL] (https://github.com/AlmasB/FXGL/wiki/Get-FXGL-%28Maven%2C-Gradle%2C-Uber%29)
+* Java 8
+* Maven
+* FXGL - [Get FXGL] (https://github.com/AlmasB/FXGL/wiki/Get-FXGL-%28Maven%2C-Gradle%2C-Uber%29)
 
 
 ## Content generation from these sources
