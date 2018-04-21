@@ -38,7 +38,7 @@ public class App extends GameApplication {
     @Override
     protected void initSettings(GameSettings settings) {
         settings.setWidth(800);
-        settings.setHeight(600);
+        settings.setHeight(480);
         settings.setTitle("Game Test App");
         settings.setVersion("0.2");
     }
@@ -50,7 +50,7 @@ public class App extends GameApplication {
         CharacterComponent control = new CharacterComponent("male-character01.png");
         player = Entities.builder()
                 .type(EntityType.PLAYER)
-                .at(300,300)
+                .at(300,200)
                 .with(control)
                 .viewFromNodeWithBBox(control.getNodeWithBBox())
                 .with(new CollidableComponent(true))
@@ -59,7 +59,7 @@ public class App extends GameApplication {
         control = new CharacterComponent("male-character02.png");
         npc = Entities.builder()
                 .type(EntityType.NPC)
-                .at(400,300)
+                .at(400,200)
                 .with(control)
                 .viewFromNodeWithBBox(control.getNodeWithBBox())
                 .with(new CollidableComponent(true))
