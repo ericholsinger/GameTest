@@ -47,3 +47,4 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 0.2
 * refactored to FXGL 0.5.0
+* refactored movement

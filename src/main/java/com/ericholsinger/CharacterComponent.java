@@ -1,7 +1,6 @@
 package com.ericholsinger;
 
 import com.almasb.fxgl.app.FXGL;
-import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
@@ -15,7 +14,10 @@ import java.util.HashMap;
  * Created by eric on 4/14/18.
  */
 public class CharacterComponent extends Component {
-    private int moveEvents = 0;
+    public final int SPEED = 150;
+
+    private int moveY = 0; // vertical movement
+    private int moveX = 0; // horizontal movement
 
     private Direction direction;
 
@@ -34,7 +36,7 @@ public class CharacterComponent extends Component {
 
         direction = Direction.SOUTH; // initial direction
 
-        // iterate over directions and populate animations for walk and idle
+        // iterate over directions and populate animations for walk and stop
         for (Direction direction : Direction.values()) {
             animWalk.put(direction,
                     CharacterSpriteSheet.getAnimationChannel(spriteSheetName,
@@ -66,39 +68,66 @@ public class CharacterComponent extends Component {
     @Override
     public void onUpdate(double tpf) {
         if (isMoving()) {
-            texture.loopAnimationChannel(animWalk.get(direction));
-        } else {
-            texture.loopAnimationChannel(animIdle.get(direction));
+            getEntity().translateX(tpf * moveX);
+            getEntity().translateY(tpf * moveY);
         }
     }
 
     public void walk(Direction direction) {
-        setDirection(direction);
-        addMoveEvent();
+        updateMovement(direction, 1);
+        updateDirection(direction);
+        updateAnimation();
     }
 
-    public void idle() {
-        subtractMoveEvent();
+    public void stop(Direction direction) {
+        updateMovement(direction, 0);
+        updateDirection(direction);
+        updateAnimation();
     }
 
-    public void idle(Direction direction) {
-        setDirection(direction);
-        idle();
-    }
-
-    public boolean isMoving() {
-        return this.moveEvents > 0;
-    }
-
-    private void addMoveEvent() {
-        ++this.moveEvents;
-    }
-
-    private void subtractMoveEvent() {
-        // never go below zero
-        if (this.moveEvents > 0) {
-            --this.moveEvents;
+    private void updateMovement(Direction direction, int factor) {
+        switch (direction) {
+            case NORTH:
+                moveY = factor * -SPEED;
+                break;
+            case SOUTH:
+                moveY = factor * SPEED;
+                break;
+            case WEST:
+                moveX = factor * -SPEED;
+                break;
+            case EAST:
+                moveX = factor * SPEED;
+                break;
         }
+    }
+
+    private void updateDirection(Direction direction) {
+        // prioritizes horizontal (EAST-WEST) over vertical
+        if (moveX > 0) {
+            setDirection(Direction.EAST);
+        } else if (moveX < 0) {
+            setDirection(Direction.WEST);
+        } else if (moveY > 0) {
+            setDirection(Direction.SOUTH);
+        } else if (moveY < 0) {
+            setDirection(Direction.NORTH);
+        } else {
+            // not moving, change to direction
+            setDirection(direction);
+        }
+    }
+
+    private void updateAnimation() {
+        if (isMoving()) {
+            texture.loopAnimationChannel(animWalk.get(getDirection()));
+        } else {
+            texture.loopAnimationChannel(animIdle.get(getDirection()));
+        }
+    }
+
+    private boolean isMoving() {
+        return (moveX != 0 || moveY != 0);
     }
 
     public Direction getDirection() {

@@ -26,19 +26,19 @@ public class App extends GameApplication {
     private Entity player;
     private Entity npc;
 
-    private final int MOVE_DISTANCE = 5;
+    private final int SCREEN_WIDTH = 800;
+    private final int SCREEN_HEIGHT = 480;
+
     private final int PLAYER_CENTER = 32;
 
     private final String BUMPSOUND = "bfxr-hit.wav";
     //music from http://tones.wolfram.com/generate/G10BkPZMEQ97GUwl7OPdckUz5774SqvpLY7y6jfMqB
     private final String BGMUSIC = "NKM-G-25-55-2994450-0-7200-26-34-3-2840-49-0-107-122-0-0-0-0-108-913-0-0-0.mp3";
 
-    private Texture spriteSheet01;
-
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(800);
-        settings.setHeight(480);
+        settings.setWidth(SCREEN_WIDTH);
+        settings.setHeight(SCREEN_HEIGHT);
         settings.setTitle("Game Test App");
         settings.setVersion("0.2");
     }
@@ -79,18 +79,17 @@ public class App extends GameApplication {
             }
             @Override
             protected void onAction() {
-                if (player.getRightX() + PLAYER_CENTER + MOVE_DISTANCE <= getGameScene().getWidth()) {
-                    player.translateX(MOVE_DISTANCE); // move right 5 pixels
-                    getGameState().increment("pixelsMoved", MOVE_DISTANCE);
+
+                if (player.getX() <= getGameScene().getWidth() - player.getWidth() / 2) {
                     getGameState().setValue("playerX", ((int) player.getX()));
                 } else {
                     getAudioPlayer().playSound(BUMPSOUND);
+                    player.getComponent(CharacterComponent.class).stop(Direction.EAST);
                 }
             }
             @Override
             protected void onActionEnd() {
-
-                player.getComponent(CharacterComponent.class).idle();
+                player.getComponent(CharacterComponent.class).stop(Direction.EAST);
             }
         }, KeyCode.D);
 
@@ -101,17 +100,16 @@ public class App extends GameApplication {
             }
             @Override
             protected void onAction() {
-                if (player.getX() + PLAYER_CENTER - MOVE_DISTANCE >= 0) {
-                    player.translateX(-MOVE_DISTANCE); // move left 5 pixels
-                    getGameState().increment("pixelsMoved", MOVE_DISTANCE);
+                if (player.getX() + player.getWidth() / 2 >= 0) {
                     getGameState().setValue("playerX", ((int) player.getX()));
                 } else {
                     getAudioPlayer().playSound(BUMPSOUND);
+                    player.getComponent(CharacterComponent.class).stop(Direction.WEST);
                 }
             }
             @Override
             protected void onActionEnd() {
-                player.getComponent(CharacterComponent.class).idle();
+                player.getComponent(CharacterComponent.class).stop(Direction.WEST);
             }
         }, KeyCode.A);
 
@@ -122,17 +120,16 @@ public class App extends GameApplication {
             }
             @Override
             protected void onAction() {
-                if (player.getY() + PLAYER_CENTER - MOVE_DISTANCE >= 0) {
-                    player.translateY(-MOVE_DISTANCE); // move up 5 pixels
-                    getGameState().increment("pixelsMoved", MOVE_DISTANCE);
+                if (player.getY() + player.getHeight() / 2 >= 0) {
                     getGameState().setValue("playerY", ((int) player.getY()));
                 } else {
                     getAudioPlayer().playSound(BUMPSOUND);
+                    player.getComponent(CharacterComponent.class).stop(Direction.NORTH);
                 }
             }
             @Override
             protected void onActionEnd() {
-                player.getComponent(CharacterComponent.class).idle();
+                player.getComponent(CharacterComponent.class).stop(Direction.NORTH);
             }
         }, KeyCode.W);
 
@@ -143,17 +140,16 @@ public class App extends GameApplication {
             }
             @Override
             protected void onAction() {
-                if (player.getY() + PLAYER_CENTER + MOVE_DISTANCE <= getGameScene().getHeight()) {
-                    player.translateY(MOVE_DISTANCE); // move down 5 pixels
-                    getGameState().increment("pixelsMoved", MOVE_DISTANCE);
+                if (player.getY() <= getGameScene().getHeight() - player.getHeight() / 2) {
                     getGameState().setValue("playerY", ((int) player.getY()));
                 } else {
                     getAudioPlayer().playSound(BUMPSOUND);
+                    player.getComponent(CharacterComponent.class).stop(Direction.SOUTH);
                 }
             }
             @Override
             protected void onActionEnd() {
-                player.getComponent(CharacterComponent.class).idle();
+                player.getComponent(CharacterComponent.class).stop(Direction.SOUTH);
             }
         }, KeyCode.S);
 
@@ -233,11 +229,18 @@ public class App extends GameApplication {
                 getAudioPlayer().playSound(BUMPSOUND);
 
                 // make npc turn toward character, using the opposite of player direction
-                npc.getComponent(CharacterComponent.class).idle(
+                npc.getComponent(CharacterComponent.class).stop(
                         DirectionHelper.opposite(
                                 player.getComponent(CharacterComponent.class).getDirection()
                         )
                 );
+
+                player.getComponent(CharacterComponent.class).stop(player.getComponent(CharacterComponent.class).getDirection());
+            }
+
+            @Override
+            protected void onCollision(Entity player, Entity npc) {
+
             }
 
             @Override
