@@ -240,7 +240,21 @@ public class App extends GameApplication {
 
             @Override
             protected void onCollision(Entity player, Entity npc) {
+                Direction playerDirection = player.getComponent(CharacterComponent.class).getDirection();
 
+                if (playerDirection == Direction.EAST
+                        && player.getRightX() > npc.getX() && player.getX() < npc.getX()) {
+                    player.setX(npc.getX() - player.getWidth() - 1);
+                } else if (playerDirection == Direction.WEST
+                        && player.getX() < npc.getRightX() && player.getRightX() > npc.getRightX()) {
+                    player.setX(npc.getRightX() + 1);
+                } else if (playerDirection == Direction.SOUTH
+                        && player.getBottomY() > npc.getY() && player.getY() < npc.getY()) {
+                    player.setY(npc.getY() - player.getHeight() - 1);
+                } else if (playerDirection == Direction.NORTH
+                        && player.getY() < npc.getBottomY() && player.getBottomY() > npc.getBottomY()) {
+                    player.setY(npc.getBottomY() + 1);
+                }
             }
 
             @Override
