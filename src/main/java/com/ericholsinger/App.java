@@ -6,12 +6,15 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.settings.*;
 import com.almasb.fxgl.texture.Texture;
 import com.ericholsinger.enums.Direction;
 import com.ericholsinger.enums.EntityType;
 import com.ericholsinger.utility.DirectionHelper;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 
@@ -52,7 +55,8 @@ public class App extends GameApplication {
                 .type(EntityType.PLAYER)
                 .at(300,200)
                 .with(control)
-                .viewFromNodeWithBBox(control.getNodeWithBBox())
+                .bbox(new HitBox("BODY", new Point2D(16, 0), BoundingShape.box(32, 64)))
+                .viewFromNode(control.getNode())
                 .with(new CollidableComponent(true))
                 .buildAndAttach(getGameWorld());
 
@@ -61,7 +65,8 @@ public class App extends GameApplication {
                 .type(EntityType.NPC)
                 .at(400,200)
                 .with(control)
-                .viewFromNodeWithBBox(control.getNodeWithBBox())
+                .bbox(new HitBox("BODY", new Point2D(16, 0), BoundingShape.box(32, 64)))
+                .viewFromNode(control.getNode())
                 .with(new CollidableComponent(true))
                 .buildAndAttach(getGameWorld());
     }
@@ -247,7 +252,7 @@ public class App extends GameApplication {
                     player.setX(npc.getX() - player.getWidth() - 1);
                 } else if (playerDirection == Direction.WEST
                         && player.getX() < npc.getRightX() && player.getRightX() > npc.getRightX()) {
-                    player.setX(npc.getRightX() + 1);
+                    player.setX(npc.getX() + 33);
                 } else if (playerDirection == Direction.SOUTH
                         && player.getBottomY() > npc.getY() && player.getY() < npc.getY()) {
                     player.setY(npc.getY() - player.getHeight() - 1);
