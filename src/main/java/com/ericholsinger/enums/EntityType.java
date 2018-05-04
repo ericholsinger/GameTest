@@ -6,4 +6,5 @@ package com.ericholsinger.enums;
 public enum EntityType {
     PLAYER
     , NPC
+    , TERRAIN
 }

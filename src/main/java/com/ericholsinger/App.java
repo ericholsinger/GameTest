@@ -27,12 +27,9 @@ import java.util.Map;
 public class App extends GameApplication {
 
     private Entity player;
-    private Entity npc;
 
     private final int SCREEN_WIDTH = 800;
     private final int SCREEN_HEIGHT = 480;
-
-    private final int PLAYER_CENTER = 32;
 
     private final String BUMPSOUND = "bfxr-hit.wav";
     //music from http://tones.wolfram.com/generate/G10BkPZMEQ97GUwl7OPdckUz5774SqvpLY7y6jfMqB
@@ -50,23 +47,28 @@ public class App extends GameApplication {
     protected void initGame() {
         super.initGame();
 
+        getGameWorld().addEntityFactory(new TerrainFactory());
+        getGameWorld().setLevelFromMap("gametest.json");
+
         CharacterComponent control = new CharacterComponent("male-character01.png");
         player = Entities.builder()
                 .type(EntityType.PLAYER)
                 .at(300,200)
                 .with(control)
-                .bbox(new HitBox("BODY", new Point2D(16, 0), BoundingShape.box(32, 64)))
-                .viewFromNode(control.getNode())
+//                .bbox(new HitBox("BODY", new Point2D(16, 0), BoundingShape.box(32, 64)))
+//                .viewFromNode(control.getNode())
+                .viewFromNodeWithBBox(control.getNodeWithBBox())
                 .with(new CollidableComponent(true))
                 .buildAndAttach(getGameWorld());
 
         control = new CharacterComponent("male-character02.png");
-        npc = Entities.builder()
+        Entities.builder()
                 .type(EntityType.NPC)
                 .at(400,200)
                 .with(control)
-                .bbox(new HitBox("BODY", new Point2D(16, 0), BoundingShape.box(32, 64)))
-                .viewFromNode(control.getNode())
+//                .bbox(new HitBox("BODY", new Point2D(16, 0), BoundingShape.box(32, 64)))
+//                .viewFromNode(control.getNode())
+                .viewFromNodeWithBBox(control.getNodeWithBBox())
                 .with(new CollidableComponent(true))
                 .buildAndAttach(getGameWorld());
     }
@@ -252,7 +254,7 @@ public class App extends GameApplication {
                     player.setX(npc.getX() - player.getWidth() - 1);
                 } else if (playerDirection == Direction.WEST
                         && player.getX() < npc.getRightX() && player.getRightX() > npc.getRightX()) {
-                    player.setX(npc.getX() + 33);
+                    player.setX(npc.getRightX() + 1);
                 } else if (playerDirection == Direction.SOUTH
                         && player.getBottomY() > npc.getY() && player.getY() < npc.getY()) {
                     player.setY(npc.getY() - player.getHeight() - 1);
@@ -261,6 +263,43 @@ public class App extends GameApplication {
                     player.setY(npc.getBottomY() + 1);
                 }
             }
+
+            @Override
+            protected  void onCollisionEnd(Entity player, Entity npc) {
+                getGameState().setValue("collided", "NO");
+            }
+        });
+
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EntityType.TERRAIN) {
+
+            // order of types is the same as passed into the constructor
+            @Override
+            protected void onCollisionBegin(Entity player, Entity entity) {
+                getGameState().setValue("collided", "YES");
+                getAudioPlayer().playSound(BUMPSOUND);
+
+                player.getComponent(CharacterComponent.class).stop(player.getComponent(CharacterComponent.class).getDirection());
+            }
+
+            @Override
+            protected void onCollision(Entity player, Entity entity) {
+                Direction playerDirection = player.getComponent(CharacterComponent.class).getDirection();
+
+                if (playerDirection == Direction.EAST
+                        && entity.getX() < player.getRightX() && player.getX() < entity.getX()) {
+                    player.setX(entity.getX() - player.getWidth() - 1);
+                } else if (playerDirection == Direction.WEST
+                        && player.getX() < entity.getRightX() && entity.getRightX() < player.getRightX()) {
+                    player.setX(entity.getRightX() + 1);
+                } else if (playerDirection == Direction.SOUTH
+                        && player.getBottomY() > entity.getY() && player.getY() < entity.getY()) {
+                    player.setY(entity.getY() - player.getHeight() - 1);
+                } else if (playerDirection == Direction.NORTH
+                        && player.getY() < entity.getBottomY() && player.getBottomY() > entity.getBottomY()) {
+                    player.setY(entity.getBottomY() + 1);
+                }
+            }
+
 
             @Override
             protected  void onCollisionEnd(Entity player, Entity npc) {

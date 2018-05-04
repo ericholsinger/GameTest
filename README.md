@@ -14,7 +14,8 @@ I'm using IntelliJ on a Mac and I started with the [FXGL Wiki](https://github.co
 
 
 ## Content generation from these sources
-
+* [Liberated Pixel Cup] (http://lpc.opengameart.org/) - For tilesets
+* [Tiled] (https://www.mapeditor.org/) - Map editor
 * [LPC Sprite Character Generator](http://gaurav.munjal.us/Universal-LPC-Spritesheet-Character-Generator/) - For sprites
 * [WolframTones](http://tones.wolfram.com/generate/G10BkPZMEQ97GUwl7OPdckUz5774SqvpLY7y6jfMqB) - For procedurally generated music
 * [BFXR](https://www.bfxr.net/) - Used to generate sound effects
@@ -49,3 +50,5 @@ See also the list of [contributors](https://github.com/your/project/contributors
 * refactored to FXGL 0.5.0
 * refactored movement
 * player cannot walk over NPCs bounding box
+* ~~tightened up the hitbox (still code-messy)~~
+* tilemap background with terrain items

@@ -60,10 +60,6 @@ public class CharacterComponent extends Component {
         return texture;
     }
 
-    public Node getNode() {
-        return texture;
-    }
-
     @Override
     public void onAdded() {
         entity.setView(texture);
