@@ -1,23 +1,22 @@
 package com.ericholsinger;
 
-import com.almasb.fxgl.app.*;
+import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
-import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.physics.HitBox;
-import com.almasb.fxgl.settings.*;
-import com.almasb.fxgl.texture.Texture;
+import com.almasb.fxgl.settings.GameSettings;
 import com.ericholsinger.enums.Direction;
 import com.ericholsinger.enums.EntityType;
 import com.ericholsinger.utility.DirectionHelper;
-import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 
 /**
@@ -27,6 +26,8 @@ import java.util.Map;
 public class App extends GameApplication {
 
     private Entity player;
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
     private final int SCREEN_WIDTH = 800;
     private final int SCREEN_HEIGHT = 480;
@@ -48,15 +49,26 @@ public class App extends GameApplication {
         super.initGame();
 
         getGameWorld().addEntityFactory(new TerrainFactory());
-        getGameWorld().setLevelFromMap("gametest.json");
+        getGameWorld().setLevelFromMap("gametest-paths.json");
+
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.YEAR, 1);
+        calendar.set(Calendar.DATE, 1);
+
+        getMasterTimer().runAtInterval(() -> {
+            // every real second is a game minute
+            calendar.add(Calendar.MINUTE, 1);
+            getGameState().setValue("date-time", dateFormat.format(calendar.getTime()));
+        }, Duration.seconds(1));
 
         CharacterComponent control = new CharacterComponent("male-character01.png");
         player = Entities.builder()
                 .type(EntityType.PLAYER)
-                .at(300,200)
+                .at(300,130)
                 .with(control)
-//                .bbox(new HitBox("BODY", new Point2D(16, 0), BoundingShape.box(32, 64)))
-//                .viewFromNode(control.getNode())
                 .viewFromNodeWithBBox(control.getNodeWithBBox())
                 .with(new CollidableComponent(true))
                 .buildAndAttach(getGameWorld());
@@ -64,10 +76,26 @@ public class App extends GameApplication {
         control = new CharacterComponent("male-character02.png");
         Entities.builder()
                 .type(EntityType.NPC)
-                .at(400,200)
+                .at(680,90)
                 .with(control)
-//                .bbox(new HitBox("BODY", new Point2D(16, 0), BoundingShape.box(32, 64)))
-//                .viewFromNode(control.getNode())
+                .viewFromNodeWithBBox(control.getNodeWithBBox())
+                .with(new CollidableComponent(true))
+                .buildAndAttach(getGameWorld());
+
+        control = new CharacterComponent("female-character02.png");
+        Entities.builder()
+                .type(EntityType.NPC)
+                .at(64,160)
+                .with(control)
+                .viewFromNodeWithBBox(control.getNodeWithBBox())
+                .with(new CollidableComponent(true))
+                .buildAndAttach(getGameWorld());
+
+        control = new CharacterComponent("female-character01.png");
+        Entities.builder()
+                .type(EntityType.NPC)
+                .at(490,350)
+                .with(control)
                 .viewFromNodeWithBBox(control.getNodeWithBBox())
                 .with(new CollidableComponent(true))
                 .buildAndAttach(getGameWorld());
@@ -186,6 +214,11 @@ public class App extends GameApplication {
         textPlayerCollidedLabel.setTranslateY(80);
         textPlayerCollidedLabel.textProperty().set("Collide");
 
+        Text textTimeLabel = new Text();
+        textTimeLabel.setTranslateX(10);
+        textTimeLabel.setTranslateY(100);
+        textTimeLabel.textProperty().set("Time");
+
         Text textPixelsMoved = new Text();
         textPixelsMoved.setTranslateX(60);
         textPixelsMoved.setTranslateY(20);
@@ -206,15 +239,22 @@ public class App extends GameApplication {
         textPlayerCollided.setTranslateY(80);
         textPlayerCollided.textProperty().bind(getGameState().stringProperty("collided"));
 
+        Text textTime = new Text();
+        textTime.setTranslateX(60);
+        textTime.setTranslateY(100);
+        textTime.textProperty().bind(getGameState().stringProperty("date-time"));
+
         getGameScene().addUINode(textPixelsMovedLabel);
         getGameScene().addUINode(textPlayerXLabel);
         getGameScene().addUINode(textPlayerYLabel);
         getGameScene().addUINode(textPlayerCollidedLabel);
+        getGameScene().addUINode(textTimeLabel);
 
         getGameScene().addUINode(textPixelsMoved);
         getGameScene().addUINode(textPlayerX);
         getGameScene().addUINode(textPlayerY);
         getGameScene().addUINode(textPlayerCollided);
+        getGameScene().addUINode(textTime);
 
         getAssetLoader().loadSound(BUMPSOUND);
         getAssetLoader().loadMusic(BGMUSIC);
@@ -315,6 +355,7 @@ public class App extends GameApplication {
         vars.put("playerY", 0);
         vars.put("playerY", 0);
         vars.put("collided", "NO");
+        vars.put("date-time", "0001/01/01 12:00");
     }
 
     public static void main(String[] args) {
